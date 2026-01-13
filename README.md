@@ -1,1 +1,8 @@
 # Project_STSE_Stefan-Cristian-Tecu-Ionut
+-Porneste Docker 
+-Porneste Elastic search http://localhost:9200/
+-Porneste Kibana http://localhost:5601/
+-In folderul asta deschide un CMD si ruleaza comanda
+node server.js dupa care deschide index.html
+http://localhost:3000/search?q=bulev
+rezultate in format JSon 
