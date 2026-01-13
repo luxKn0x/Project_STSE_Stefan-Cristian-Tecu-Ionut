@@ -1,0 +1,33 @@
+<!doctype html><meta charset="utf-8">
+<title>Address Finder</title>
+<style>
+  body{font-family:system-ui,Segoe UI,Roboto,Arial;margin:32px}
+  input,select{padding:10px;font-size:16px;margin-right:6px}
+  #q{width:420px}
+  ul{list-style:none;padding:0;margin-top:12px}
+  li{padding:8px 10px;border:1px solid #ddd;margin-top:-1px}
+  .muted{color:#666;font-size:12px}
+</style>
+<h2>Address Finder</h2>
+<input id="q" placeholder="ex: bulev unirii, timisoara 92..." autofocus>
+<button id="go">Caută</button>
+<div class="muted">Tastează sau apasă „Caută”.</div>
+<ul id="suggest"></ul>
+<ul id="results"></ul>
+<script>
+const q = document.getElementById('q');
+const results = document.getElementById('results');
+const suggest = document.getElementById('suggest');
+const go = document.getElementById('go');
+let t;
+async function run() {
+  const val = q.value.trim();
+  if (!val){ results.innerHTML=''; suggest.innerHTML=''; return; }
+  const r = await fetch('http://localhost:3000/search?q=' + encodeURIComponent(val));
+  const data = await r.json();
+  suggest.innerHTML = (data.suggestions||[]).map(s => `<li onclick="q.value='${s}';run()">${s}</li>`).join('');
+  results.innerHTML = (data.hits||[]).map(h => `<li>${h.full} <span class="muted">(score ${h.score.toFixed(2)})</span></li>`).join('') || '<li>Nimic găsit</li>';
+}
+q.addEventListener('input', ()=>{ clearTimeout(t); t=setTimeout(run,200); });
+go.addEventListener('click', run);
+</script>
